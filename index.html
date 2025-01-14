@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/Interactive-Calculator-with-Keyboard-Support/style.css">
     <script src="https://kit.fontawesome.com/70198d163b.js" crossorigin="anonymous"></script>
 
     <title>Calculator</title>
@@ -25,41 +25,89 @@
             <input id="result" type="text" readonly >
 
         </div>
+        <!-- SELECT OPTION -->
+        <div id="selectmode">
+            <label for="mode">Choose mode&ThickSpace;:</label>
+            <select id="mode" name="mode">
+                <option value="normal">Normal</option>
+                <option value="scientific">Scientific</option>
+                <option value="bitwise">Bitwise</option>
+            </select>
+        </div>
         <div id="rows">
+
+
+            <div class="scibtn" id="row-2">
+                <button onclick="clickeddeg()" id="deg">Deg</button>
+                <button class="trignoration" id="sin">sin</button>
+                <button class="trignoration" id="cos">cos</button>
+                <button class="trignoration" id="tan">tan</button>
+                <button id="EXP">EXP</button>
+            </div>
+            <div class="scibtn" id="row-1">
+                <button onclick="clickedrad()" id="rad">Rad</button>
+                <button id="inv">Inv</button>
+                <button id="pie">π</button>
+                <button id="e">e</button>
+                <button id="ans">Ans</button>
+            </div>
+            <div class="scibtn" id="row0">
+                <button id="factorial">X!</button>
+                <button id="ln">ln</button>
+                <button id="log">log</button>
+                <button id="root">&radic;</button>
+                <button id="xtoy">X<sup>y</sup></button>
+                
+            </div>
+
             <div class="calbtns" id="row1">
-                <button id="clearall">AC</button>
+                <button id="bracket-left">&#40;</button>
                 <button id="seven">7</button>
                 <button id="four">4</button>
                 <button id="one">1</button>
-                <button id="dot">.</button>
+                <button id="decimal">.</button>
             </div>
             <div class="calbtns" id="row2">
-                <button class="arthemetic" id="modulus">%</button>
+                <button id="bracket-right">&#41;</button>
                 <button id="eight">8</button>
                 <button id="five">5</button>
                 <button id="two">2</button>
                 <button id="zero">0</button>
             </div>
             <div class="calbtns" id="row3">
-                <button class="arthemetic" id="subtract">-</button>
+                <button id="clearall">AC</button>
                 <button id="nine">9</button>
                 <button id="six">6</button>
                 <button id="three">3</button>
                 <button id="delete">Del</button>
             </div>
             <div class="calbtns" id="row4">
+                <button class="arthemetic" id="subtract">-</button>
                 <button class="arthemetic" id="divide">/</button>
                 <button class="arthemetic" id="multiply">*</button>
                 <button class="arthemetic" id="add">+</button>
                 <button id="equals">=</button>
             </div>
+
+            <!-- UNCOMMETN TO REVERT  -->
+
+
+            <!-- <div class="calbtns" id="row5">
+                <button class="mode" onclick="setmodescientific()" id="scientific">Scientific</button>
+                <button class="mode" id="bit">Bit arthemetic</button>
+                <button class="mode" onclick="setmodenormal()" id="other">Normal</button>
+                
+            </div> -->
+
+
+
         </div>
        </main>
     <footer>
         
         <div id="footertext" style="display: flex; gap: 15px; align-items: center;"><p>Made By <h2>Shashi Kant</h2> with ❤️</p></div>
         <br>
-        <a target="_blank" href="https://www.flaticon.com/free-icons/calculator" title="calculator icons">Calculator ICONS used from Freepik - Flaticon</a>
+        <a target="_blank" href="https://www.flaticon.com/free-icons/calculator" title="calculator icons">Calculator ICON for website used from Freepik - Flaticon</a>
     </footer>
 
 
