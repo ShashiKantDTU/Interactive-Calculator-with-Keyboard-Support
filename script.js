@@ -501,7 +501,7 @@ function clickedac() {
 
 function clickedequals() {
     try {
-
+        
         // Check if the display is empty
         if (display.value == "") {
             display.value = ""
@@ -554,57 +554,6 @@ function clickedequals() {
                 // let temp3 ;
                 if (degree) {
                     
-                    temp = temp.replace(/(\d*\.?\d*)tan⁻¹\((\d*\.?\d*)\)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            return "Math.atan(" + exponent + ")";
-                        } else {
-                            return base + " * Math.atan(" + exponent + ")";
-                        }
-                    });
-                    // Step 2: Evaluate the Math.atan() expression
-                    temp = temp.replace(/Math.atan\(([^)]+)\)/g, function (match, expression) {
-                        let result = eval(match);  // Evaluate the expression inside Math.atan
-                         result = result * (180 / Math.PI);
-                         return result;
-                    });
-
-                    temp = temp.replace(/(\d*\.?\d*)sin⁻¹\((\d*\.?\d*)\)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            return "Math.asin(" + exponent + ")";
-                        } else {
-                            return base + " * Math.asin(" + exponent + ")";
-                        }
-                    });
-     
-                    // Step 2: Evaluate the Math.asin() expression
-                    temp = temp.replace(/Math.asin\(([^)]+)\)/g, function (match, expression) {
-                        let result = eval(match);  // Evaluate the expression inside Math.asin
-                         result = result * (180 / Math.PI);
-                         return result;
-                    });
-
-                    temp = temp.replace(/(\d*\.?\d*)cos⁻¹\((\d*\.?\d*)\)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            return "Math.acos(" + exponent + ")";
-                        } else {
-                            return base + " * Math.acos(" + exponent + ")";
-                        }
-                    });
-                    
-                    // Step 2: Evaluate the Math.acos() expression
-                    temp = temp.replace(/Math.acos\(([^)]+)\)/g, function (match, expression) {
-                       
-                        let result = eval(match);  // Evaluate the expression inside Math.acos
-                     
-                         result = result * (180 / Math.PI);
-                        
-                         return result;
-                    });
-                
-
-                
-                }
-                else {
                     temp = temp.replace(/(\d*\.?\d*)tan⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
                         if (base === "") {
                             if (exponent === "") {
@@ -620,7 +569,207 @@ function clickedequals() {
                             }
                         }
                     });
+                    console.log(temp)
+
+                    function transformAtanExpression(temp) {
+                        const atanRegex = /Math\.atan\(/g; // Match the start of Math.atan(
+                        let match;
+                    
+                        while ((match = atanRegex.exec(temp)) !== null) {
+                            let startIndex = match.index + match[0].length; // Index after "Math.atan("
+                            let openParentheses = 1; // Track open parentheses
+                            let endIndex = startIndex;
+                    
+                            // Traverse the string to find the matching closing parenthesis
+                            while (openParentheses > 0 && endIndex < temp.length) {
+                                if (temp[endIndex] === "(") {
+                                    openParentheses++;
+                                } else if (temp[endIndex] === ")") {
+                                    openParentheses--;
+                                }
+                                endIndex++;
+                            }
+                    
+                            if (openParentheses === 0) {
+                                // Extract the inner expression
+                                const innerExpression = temp.slice(startIndex, endIndex - 1);
+                    
+                                // Transform the expression
+                                const transformed = `Math.atan(${innerExpression}) * ( 180 / π )`;
+                    
+                                // Replace the original substring with the transformed one
+                                temp =
+                                    temp.slice(0, match.index) +
+                                    transformed +
+                                    temp.slice(endIndex);
+                            } else {
+                                throw new Error(
+                                    "Unmatched parentheses in Math.atan expression"
+                                );
+                            }
+                        }
+                    
+                        return temp;
+
+                    }
+
+                    temp = transformAtanExpression(temp);
+
                     temp = temp.replace(/(\d*\.?\d*)sin⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
+                        if (base === "") {
+                            if (exponent === "") {
+                                return "Math.asin("; // No base, no exponent
+                            } else {
+                                return "Math.asin(" + exponent; // Only exponent provided
+                            }
+                        } else {
+                            if (exponent === "") {
+                                return base + " * Math.asin("; // Base provided, no exponent
+                            } else {
+                                return base + " * Math.asin(" + exponent; // Base and exponent provided
+                            }
+                        }
+                    });
+                    console.log(temp)
+
+                    function transformAsinExpression(temp) {
+                        const asinRegex = /Math\.asin\(/g; // Match the start of Math.asin(
+                        let match;
+                    
+                        while ((match = asinRegex.exec(temp)) !== null) {
+                            let startIndex = match.index + match[0].length; // Index after "Math.asin("
+                            let openParentheses = 1; // Track open parentheses
+                            let endIndex = startIndex;
+                    
+                            // Traverse the string to find the matching closing parenthesis
+                            while (openParentheses > 0 && endIndex < temp.length) {
+                                if (temp[endIndex] === "(") {
+                                    openParentheses++;
+                                } else if (temp[endIndex] === ")") {
+                                    openParentheses--;
+                                }
+                                endIndex++;
+                            }
+                    
+                            if (openParentheses === 0) {
+                                // Extract the inner expression
+                                const innerExpression = temp.slice(startIndex, endIndex - 1);
+                    
+                                // Transform the expression
+                                const transformed = `Math.asin(${innerExpression}) * ( 180 / π )`;
+                    
+                                // Replace the original substring with the transformed one
+                                temp =
+                                    temp.slice(0, match.index) +
+                                    transformed +
+                                    temp.slice(endIndex);
+                            } else {
+                                throw new Error(
+                                    "Unmatched parentheses in Math.asin expression"
+                                );
+                            }
+                        }
+                    
+                        return temp;
+                        
+                    }
+
+                    temp = transformAsinExpression(temp);
+
+                    temp = temp.replace(/(\d*\.?\d*)cos⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
+                        if (base === "") {
+                            if (exponent === "") {
+                                return "Math.acos("; // No base, no exponent
+                            } else {
+                                return "Math.acos(" + exponent; // Only exponent provided
+                            }
+                        } else {
+                            if (exponent === "") {
+                                return base + " * Math.acos("; // Base provided, no exponent
+                            } else {
+                                return base + " * Math.acos(" + exponent; // Base and exponent provided
+                            }
+                        }
+                    });
+                    console.log(temp)
+
+                    function transformAcosExpression(temp) {
+                        const acosRegex = /Math\.acos\(/g; // Match the start of Math.acos(
+                        let match;
+                    
+                        while ((match = acosRegex.exec(temp)) !== null) {
+                            let startIndex = match.index + match[0].length; // Index after "Math.acos("
+                            let openParentheses = 1; // Track open parentheses
+                            let endIndex = startIndex;
+                    
+                            // Traverse the string to find the matching closing parenthesis
+                            while (openParentheses > 0 && endIndex < temp.length) {
+                                if (temp[endIndex] === "(") {
+                                    openParentheses++;
+                                } else if (temp[endIndex] === ")") {
+                                    openParentheses--;
+                                }
+                                endIndex++;
+                            }
+                    
+                            if (openParentheses === 0) {
+                                // Extract the inner expression
+                                const innerExpression = temp.slice(startIndex, endIndex - 1);
+                    
+                                // Transform the expression
+                                const transformed = `Math.acos(${innerExpression}) * ( 180 / π )`;
+                    
+                                // Replace the original substring with the transformed one
+                                temp =
+                                    temp.slice(0, match.index) +
+                                    transformed +
+                                    temp.slice(endIndex);
+                            } else {
+                                throw new Error(
+                                    "Unmatched parentheses in Math.acos expression"
+                                );
+                            }
+                        }
+                    
+                        return temp;
+                        
+                    }
+
+                    temp = transformAcosExpression(temp);
+
+
+                    // What the Functions Do an example of it :- 
+
+                    // Example Usage
+                    // let temp = "Math.atan(root(3)/2) + Math.atan(log(5) + root(3))";
+                    // temp = transformAtanExpression(temp);
+                    // console.log(temp);
+                    // Output: "Math.atan(root(3)/2) * ( 180 / π ) + Math.atan(log(5) + root(3)) * ( 180 / π )"
+                    
+                    
+                  
+                
+                }
+                else {
+                    temp = temp.replace(/(\d*\.?\d*)tan⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
+                        if (base === "") {
+                            if (exponent === "") {
+                                return "Math.atan("; // No base, no exponent
+                            } else {
+
+                                
+
+                                return "Math.atan(" + exponent; // Only exponent provided
+                            }
+                        } else {
+                            if (exponent === "") {
+                                return base + " * Math.atan("; // Base provided, no exponent
+                            } else {
+                                return base + " * Math.atan(" + exponent; // Base and exponent provided
+                            }
+                        }
+                    });
+                    temp = temp.replace(/(\d*\.?\d*)sin⁻¹\((\(.?\d*\.?\d*)/g, function (match, base, exponent) {
                         if (base === "") {
                             if (exponent === "") {
                                 return "Math.asin("; // No base, no exponent
@@ -827,7 +976,7 @@ function clickedequals() {
 
 
             // Evaluate the final expression and set the result
-
+            console.log("transformed expression : ", temp);
             // CHECK IF ALL PARANTHESIS ARE CLOSED 
             function checkvalid() {
                 let char, opencount = 0;
