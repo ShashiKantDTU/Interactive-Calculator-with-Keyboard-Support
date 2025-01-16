@@ -8,6 +8,7 @@
 html,body {
     margin: 0;
     padding: 0;
+    background: linear-gradient(to right, #222831, #393e46); /* Darker background */
     min-height: 100vh;
     min-width: fit-content;
 }
@@ -27,10 +28,11 @@ header{
     /* gap: 20px; */
 
     box-sizing: border-box;
-    padding: 20px;
+    padding: 20px 0 20px 0;
     height: 80px;
     width: 100%;
     background-color: #434a54; /* Dark gray header */
+    overflow: hidden;
 }
 
 header h1{
@@ -88,6 +90,10 @@ main{
     font-size: large;
 }
 
+#display input:focus {
+    outline: none;
+}
+
 #display #text{
     
     height: 40%;
@@ -115,13 +121,7 @@ main{
     flex: 1;
 }
 
-/* UNCOMMENT TO REVERT */
 
-/* #row5 {
-    display: flex;
-    flex-direction: row;
-    writing-mode: vertical-rl;
-} */
 
 /* YELLOW COLOR */
 .calbtns {
@@ -200,7 +200,7 @@ main{
 }
 
 #equals {
-    /* flex: 2.06; */
+    
     background: linear-gradient(to bottom, #ff4e50, #623e17); /* Dark red equals button */
 }
 

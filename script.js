@@ -78,15 +78,15 @@ const trigLookupTable = {
 
 // Event Listener for mode switch list
 
-mode.addEventListener("input", ()=>{
+mode.addEventListener("input", () => {
     switch (mode.value) {
         case "normal":
             setmodenormal();
             break;
-        case "scientific" :
+        case "scientific":
             setmodescientific();
             break;
-        case "bitwise" :
+        case "bitwise":
             setmodebitwise();
             break;
         default:
@@ -237,43 +237,46 @@ function keypressed(event) {
             clickeddecimal();
             break;
         case "s":
-            clickedsin();
+            if (mode.value === "scientific") clickedsin();
             break;
         case "c":
-            clickedcos();
+            if (mode.value === "scientific") clickedcos();
             break;
         case "t":
-            clickedtan();
+            if (mode.value === "scientific") clickedtan();
             break;
         case "e":
-            clickedexp();
-            break;
-        case "i":
-            toggleinverse();
+            if (mode.value === "scientific") clickede();
             break;
         case "p":
-            clickedpie();
-            break;
-        case "E":
-            clickede();
+            if (mode.value === "scientific") clickedpie();
             break;
         case "a":
-            clickedans();
-            break;
-        case "!":
-            clickedfactorial();
+            if (mode.value === "scientific") clickedans();
             break;
         case "l":
-            clickedln();
+            if (mode.value === "scientific") clickedln();
             break;
-        case "g":
-            clickedlog();
+        case "o":
+            if (mode.value === "scientific") clickedlog();
             break;
         case "r":
-            clickedroot();
+            if (mode.value === "scientific") clickedroot();
             break;
         case "^":
-            clickedxtoy();
+            if (mode.value === "scientific") clickedxtoy();
+            break;
+        case "!":
+            if (mode.value === "scientific") clickedfactorial();
+            break;
+        case "d":
+            if (mode.value === "scientific") clickeddeg();
+            break;
+        case "i":
+            if (mode.value === "scientific") toggleinverse();
+            break;
+        case "n":
+            if (mode.value === "scientific") clickedrad();
             break;
         default:
             break;
@@ -500,519 +503,361 @@ function clickedac() {
 }
 
 function clickedequals() {
-    try {
-        
-        // Check if the display is empty
-        if (display.value == "") {
-            display.value = ""
-        }
-        else {
 
+    if (display.value === "") {
+        display.value = "";
+        result.value = "";
+    }
+    else {
 
-            let temp = "";
-            temp = display.value;
+        let string = "";
+        string = display.value;
 
-        if(degree){
-            // Replace Ans with the previous result
-            temp = temp.replace(/Ans/g, lastresult);
-
-
-
-            temp = temp.replace(/(\d*)tan\((\d*)/g, function (match, base, exponent) {
-                if (exponent !== "") {
-                    if (trigLookupTable.tan.hasOwnProperty(exponent)) {
-                       
-                        return "(" + trigLookupTable.tan[exponent] ;
-                    }
-                    else{ return match;}
+        try {
+            // check for open paranthesis
+            let openparanthesis = (string.match(/\(/g) || []).length;
+            let closeparanthesis = (string.match(/\)/g) || []).length;
+            if (openparanthesis > closeparanthesis) {
+                let diff = openparanthesis - closeparanthesis;
+                for (let i = 0; i < diff; i++) {
+                    string = string + ")";
                 }
-            });
-            
-           
-            temp = temp.replace(/(\d*)sin\((\d*)/g, function (match, base, exponent) {
-                if (exponent !== "") {
-                    if (trigLookupTable.sin.hasOwnProperty(exponent)) {
-                        return "(" + trigLookupTable.sin[exponent];
-                    }
-                    else{ return match;}
-
-                }
-            });
-
-            temp = temp.replace(/(\d*)cos\((\d*)/g, function (match, base, exponent) {
-                if (exponent !== "") {
-                    if (trigLookupTable.cos.hasOwnProperty(exponent)) {
-                        return "(" + trigLookupTable.cos[exponent];
-                    }
-                    else{ return match;}
-
-                }
-            });
-        }else{}
-
-            if (isinverse) {
-                // let temp3 ;
-                if (degree) {
-                    
-                    temp = temp.replace(/(\d*\.?\d*)tan⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.atan("; // No base, no exponent
-                            } else {
-                                return "Math.atan(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.atan("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.atan(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                    console.log(temp)
-
-                    function transformAtanExpression(temp) {
-                        const atanRegex = /Math\.atan\(/g; // Match the start of Math.atan(
-                        let match;
-                    
-                        while ((match = atanRegex.exec(temp)) !== null) {
-                            let startIndex = match.index + match[0].length; // Index after "Math.atan("
-                            let openParentheses = 1; // Track open parentheses
-                            let endIndex = startIndex;
-                    
-                            // Traverse the string to find the matching closing parenthesis
-                            while (openParentheses > 0 && endIndex < temp.length) {
-                                if (temp[endIndex] === "(") {
-                                    openParentheses++;
-                                } else if (temp[endIndex] === ")") {
-                                    openParentheses--;
-                                }
-                                endIndex++;
-                            }
-                    
-                            if (openParentheses === 0) {
-                                // Extract the inner expression
-                                const innerExpression = temp.slice(startIndex, endIndex - 1);
-                    
-                                // Transform the expression
-                                const transformed = `Math.atan(${innerExpression}) * ( 180 / π )`;
-                    
-                                // Replace the original substring with the transformed one
-                                temp =
-                                    temp.slice(0, match.index) +
-                                    transformed +
-                                    temp.slice(endIndex);
-                            } else {
-                                throw new Error(
-                                    "Unmatched parentheses in Math.atan expression"
-                                );
-                            }
-                        }
-                    
-                        return temp;
-
-                    }
-
-                    temp = transformAtanExpression(temp);
-
-                    temp = temp.replace(/(\d*\.?\d*)sin⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.asin("; // No base, no exponent
-                            } else {
-                                return "Math.asin(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.asin("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.asin(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                    console.log(temp)
-
-                    function transformAsinExpression(temp) {
-                        const asinRegex = /Math\.asin\(/g; // Match the start of Math.asin(
-                        let match;
-                    
-                        while ((match = asinRegex.exec(temp)) !== null) {
-                            let startIndex = match.index + match[0].length; // Index after "Math.asin("
-                            let openParentheses = 1; // Track open parentheses
-                            let endIndex = startIndex;
-                    
-                            // Traverse the string to find the matching closing parenthesis
-                            while (openParentheses > 0 && endIndex < temp.length) {
-                                if (temp[endIndex] === "(") {
-                                    openParentheses++;
-                                } else if (temp[endIndex] === ")") {
-                                    openParentheses--;
-                                }
-                                endIndex++;
-                            }
-                    
-                            if (openParentheses === 0) {
-                                // Extract the inner expression
-                                const innerExpression = temp.slice(startIndex, endIndex - 1);
-                    
-                                // Transform the expression
-                                const transformed = `Math.asin(${innerExpression}) * ( 180 / π )`;
-                    
-                                // Replace the original substring with the transformed one
-                                temp =
-                                    temp.slice(0, match.index) +
-                                    transformed +
-                                    temp.slice(endIndex);
-                            } else {
-                                throw new Error(
-                                    "Unmatched parentheses in Math.asin expression"
-                                );
-                            }
-                        }
-                    
-                        return temp;
-                        
-                    }
-
-                    temp = transformAsinExpression(temp);
-
-                    temp = temp.replace(/(\d*\.?\d*)cos⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.acos("; // No base, no exponent
-                            } else {
-                                return "Math.acos(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.acos("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.acos(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                    console.log(temp)
-
-                    function transformAcosExpression(temp) {
-                        const acosRegex = /Math\.acos\(/g; // Match the start of Math.acos(
-                        let match;
-                    
-                        while ((match = acosRegex.exec(temp)) !== null) {
-                            let startIndex = match.index + match[0].length; // Index after "Math.acos("
-                            let openParentheses = 1; // Track open parentheses
-                            let endIndex = startIndex;
-                    
-                            // Traverse the string to find the matching closing parenthesis
-                            while (openParentheses > 0 && endIndex < temp.length) {
-                                if (temp[endIndex] === "(") {
-                                    openParentheses++;
-                                } else if (temp[endIndex] === ")") {
-                                    openParentheses--;
-                                }
-                                endIndex++;
-                            }
-                    
-                            if (openParentheses === 0) {
-                                // Extract the inner expression
-                                const innerExpression = temp.slice(startIndex, endIndex - 1);
-                    
-                                // Transform the expression
-                                const transformed = `Math.acos(${innerExpression}) * ( 180 / π )`;
-                    
-                                // Replace the original substring with the transformed one
-                                temp =
-                                    temp.slice(0, match.index) +
-                                    transformed +
-                                    temp.slice(endIndex);
-                            } else {
-                                throw new Error(
-                                    "Unmatched parentheses in Math.acos expression"
-                                );
-                            }
-                        }
-                    
-                        return temp;
-                        
-                    }
-
-                    temp = transformAcosExpression(temp);
-
-
-                    // What the Functions Do an example of it :- 
-
-                    // Example Usage
-                    // let temp = "Math.atan(root(3)/2) + Math.atan(log(5) + root(3))";
-                    // temp = transformAtanExpression(temp);
-                    // console.log(temp);
-                    // Output: "Math.atan(root(3)/2) * ( 180 / π ) + Math.atan(log(5) + root(3)) * ( 180 / π )"
-                    
-                    
-                  
-                
-                }
-                else {
-                    temp = temp.replace(/(\d*\.?\d*)tan⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.atan("; // No base, no exponent
-                            } else {
-
-                                
-
-                                return "Math.atan(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.atan("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.atan(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                    temp = temp.replace(/(\d*\.?\d*)sin⁻¹\((\(.?\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.asin("; // No base, no exponent
-                            } else {
-                                return "Math.asin(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.asin("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.asin(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                    temp = temp.replace(/(\d*\.?\d*)cos⁻¹\((\d*\.?\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            if (exponent === "") {
-                                return "Math.acos("; // No base, no exponent
-                            } else {
-                                return "Math.acos(" + exponent; // Only exponent provided
-                            }
-                        } else {
-                            if (exponent === "") {
-                                return base + " * Math.acos("; // Base provided, no exponent
-                            } else {
-                                return base + " * Math.acos(" + exponent; // Base and exponent provided
-                            }
-                        }
-                    });
-                }
-
-            }
-            else {
-                if (degree) {
-                    temp = temp.replace(/(\d*)tan\((\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            return "Math.tan(" + exponent + " * ( π / 180 )";
-                        } else {
-                            return base + " * " + "Math.tan(" + exponent + " * ( π / 180 )";
-                        }
-                    });
-                    temp = temp.replace(/(\d*)sin\((\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                           
-                            return "Math.sin(" + exponent + " * ( π / 180 )";
-                        } else {
-                            return base + " * " + "Math.sin(" + exponent + " * ( π / 180 )";
-                        }
-                    });
-                    temp = temp.replace(/(\d*)cos\((\d*)/g, function (match, base, exponent) {
-                        if (base === "") {
-                            return "Math.cos(" + exponent + " * ( π / 180 )";
-                        } else {
-                            return base + " * " + "Math.cos(" + exponent + " * ( π / 180 )";
-                        }
-                    });
-
-
-                }
-                else {
-
-                    // Replace trigonometric functions with Math functions
-                    temp = temp.replace(/(\d*)tan\(/g, function (match, base) {
-                        if (base === "") {
-                            return "Math.tan(";
-                        }
-                        else {
-                            return base + " * " + "Math.tan(";
-                        }
-                    });
-                    temp = temp.replace(/(\d*)sin\(/g, function (match, base) {
-                       
-                        if (base === "") {
-                            return "Math.sin(";
-                        }
-                        else {
-                            return base + " * " + "Math.sin(";
-                        }
-                    });
-                    temp = temp.replace(/(\d*)cos\(/g, function (match, base) {
-                        if (base === "") {
-                            return "Math.cos(";
-                        }
-                        else {
-                            return base + " * " + "Math.cos(";
-                        }
-                    });
-
-                }
-
             }
 
 
 
 
+            string = string.replace(/Ans/g, lastresult);
+            string = string.replace(/π/g, Math.PI);
+            string = string.replace(/EXP/g, "e");
+            string = string.replace(/ln\(/g, "log(");
+            string = string.replace(/log\(/g, "log10(");
+            string = string.replace(/√/g, "sqrt");
+            string = string.replace(/sin⁻¹/g, "asin");
+            string = string.replace(/cos⁻¹/g, "acos");
+            string = string.replace(/tan⁻¹/g, "atan");
 
-            // Replace exponential notation with Math.pow
-            temp = temp.replace(/(\d+)EXP(\d+)/g, function (match, base, exponent) {
-                return base + "* Math.pow(10," + exponent + ")";
-            });
-            // Replace factorial notation with calculated factorial value
-            temp = temp.replace(/(\d+)!/g, function (match, base) {
-               
-              
-                
-                base = parseInt(base);
-                if (base < 0 || !Number.isInteger(base)) {
-                    throw new Error("Factorial of other than Positive Integers are undefined");
-                }
-
-                let temp1 = 1;
-                for (let i = 1; i <= base; i++) {
-                    temp1 = temp1 * i;
-                }
-                
-                return temp1;
-            });
+            // check for deg and radians
+            if (degree) {
 
 
+                function checksinbase(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    // find index of sin()
 
+                    let sinindex1 = tempstring.indexOf("s");
+                    let sinindex0 = sinindex1 - 1;
+                    let sinindex2 = tempstring.indexOf("i");
+                    let sinindex3 = tempstring.indexOf("n");
+                    let sinindex4 = tempstring.indexOf("(");
 
-            // this fucntion will not run if base is not present
-            //  add * if a number is present directly before the eulars number
-            // temp = temp.replace(/(\d+)e/g, function (match, base) {
-            //     return base + "*" + "e";
-
-            // });
-
-            // add * if a number is directly present before the log to avoid errors
-            temp = temp.replace(/(\d*)log\(/g, function (match, base) {
-                if (base === "") {
-                    return "Math.log10("
-                }
-                else {
-                    return base + " * " + "Math.log10(";
-                }
-            });
-
-            // add * if a number is directly present before the ln to avoid errors
-            temp = temp.replace(/(\d*)ln\(/g, function (match, base) {
-                if (base === "") {
-                    return "Math.log("
-                }
-                else {
-                    return base + " * " + "Math.log(";
-                }
-            });
-
-            temp = temp.replace(/(\d*)\u221A\(/g, function (match, base) {
-                if (base === "") {
-                    return "Math.sqrt("
-                }
-                else {
-                    return base + " * " + "Math.sqrt(";
-                }
-            })
-
-            temp = temp.replace(/(\(?[\w\.\-\/\+\*\(\)]+\)?)(\^)(\(?[\w\.\-\/\+\*\(\)]+\)?)/g, function(match, base, caret, exponent) {
-            
-                let evaluatedBase, evaluatedExponent;
-            
-                // Evaluate the base
-                if (base.includes('(')) {
-                    try {
-                        evaluatedBase = eval(base.replace(/[()]/g, '')); // Evaluate base
-                    } catch (e) {
-                        console.error(`Error evaluating base: ${base}`, e);
-                        return match; // Return the original match if there's an error
-                    }
-                } else {
-                    evaluatedBase = parseFloat(base); // Parse as number if no parentheses
-                }
-            
-                // Evaluate the exponent
-                if (exponent.includes('(')) {
-                    try {
-                        evaluatedExponent = eval(exponent.replace(/[()]/g, '')); // Evaluate exponent
-                    } catch (e) {
-                        console.error(`Error evaluating exponent: ${exponent}`, e);
-                        return match; // Return the original match if there's an error
-                    }
-                } else {
-                    evaluatedExponent = parseFloat(exponent); // Parse as number if no parentheses
-                }
-            
-                // Calculate the power
-                const result = Math.pow(evaluatedBase, evaluatedExponent);
-                
-                // Check if the original base or exponent had parentheses
-                const hasBaseParentheses = base.includes('(');
-                const hasExponentParentheses = exponent.includes('(');
-                // Add parentheses around the final result if needed
-                if (hasBaseParentheses || hasExponentParentheses) {
-                    return `(${result})`; // Wrap the result in balanced parentheses
-                } else {
-                    return result; // Return the result without additional parentheses
-                }
-            });
-            
-
-            
-
-
-
-
-            // Evaluate the final expression and set the result
-            console.log("transformed expression : ", temp);
-            // CHECK IF ALL PARANTHESIS ARE CLOSED 
-            function checkvalid() {
-                let char, opencount = 0;
-                for (let i = 0; i < temp.length; i++) {
-                    char = temp[i];
-                    if (char === "(") {
-                        opencount++
-                    }
-                    else if (char === ")") {
-                        opencount--;
+                    if (sinindex4 - sinindex3 === 1 && sinindex3 - sinindex2 === 1 && sinindex2 - sinindex1 === 1 && tempstring[sinindex0] !== "a") {
+                        let sinstring = tempstring.slice(sinindex4 + 1);
+                        // find index of closing paranthesis
+                        for (let i = 0; i < sinstring.length; i++) {
+                            if (sinstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (sinstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = sinindex4 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+                        let exponent = tempstring.slice(sinindex4 + 1, closingparanthesisindex);
+                        // convert radian to degree
+                        exponent = exponent + " * pi / 180 ";
+                        if (exponent.includes("sin")) {
+                            exponent = checksinbase(exponent);
+                        }
+                        return tempstring.slice(0, sinindex4 + 1) + exponent + tempstring.slice(closingparanthesisindex);
                     }
                     else {
-
+                        return tempstring;
                     }
                 }
 
-                if (opencount === 0) { return true; }
-                else { return false; }
-            }
-            if (checkvalid()) {
-                resultgenrated = true;
-                
-                result.value = (eval(temp));
-                if (result.value !== "" && result.value != "undefined")
-                    lastresult = result.value;
-                else { }
-            }
+                function checkcosbase(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    // find index of cos()
 
+                    let cosindex1 = tempstring.indexOf("c");
+                    let cosindex0 = cosindex1 - 1;
+                    let cosindex2 = tempstring.indexOf("o");
+                    let cosindex3 = tempstring.indexOf("s");
+                    let cosindex4 = tempstring.indexOf("(");
+
+                    if (cosindex4 - cosindex3 === 1 && cosindex3 - cosindex2 === 1 && cosindex2 - cosindex1 === 1 && tempstring[cosindex0] !== "a") {
+                        let cosstring = tempstring.slice(cosindex4 + 1);
+                        // find index of closing paranthesis
+                        for (let i = 0; i < cosstring.length; i++) {
+                            if (cosstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (cosstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = cosindex4 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+                        let exponent = tempstring.slice(cosindex4 + 1, closingparanthesisindex);
+                        // convert radian to degree
+                        exponent = exponent + " * pi / 180 ";
+                        if (exponent.includes("cos")) {
+                            exponent = checkcosbase(exponent);
+                        }
+                        return tempstring.slice(0, cosindex4 + 1) + exponent + tempstring.slice(closingparanthesisindex);
+                    }
+                    else {
+                        return tempstring;
+                    }
+                }
+
+                function checktanbase(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    // find index of tan()
+                    let tanindex1 = tempstring.indexOf("t");
+                    let tanindex0 = tanindex1 - 1;
+                    let tanindex2 = tempstring.indexOf("a");
+                    let tanindex3 = tempstring.indexOf("n");
+                    let tanindex4 = tempstring.indexOf("(");
+
+                    if (tanindex4 - tanindex3 === 1 && tanindex3 - tanindex2 === 1 && tanindex2 - tanindex1 === 1 && tempstring[tanindex0] !== "a") {
+                        let tanstring = tempstring.slice(tanindex4 + 1);
+                        // find index of closing paranthesis
+                        for (let i = 0; i < tanstring.length; i++) {
+                            if (tanstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (tanstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = tanindex4 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+                        let exponent = tempstring.slice(tanindex4 + 1, closingparanthesisindex);
+                        // convert radian to degree
+                        exponent = exponent + " * pi / 180 ";
+                        if (exponent.includes("tan")) {
+                            exponent = checktanbase(exponent);
+                        }
+                        return tempstring.slice(0, tanindex4 + 1) + exponent + tempstring.slice(closingparanthesisindex);
+                    }
+                    else {
+                        return tempstring;
+                    }
+                }
+
+                string = checksinbase(string);
+                string = checkcosbase(string);
+                string = checktanbase(string);
+
+
+
+
+                // Converting Inverse Trigonometric Functions to Degree from radians
+                function degtoradianforinversesin(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    let exponent;
+                    // find index of asin()
+                    let asinindex1 = tempstring.indexOf("a");
+                    let asinindex2 = tempstring.indexOf("s");
+                    let asinindex3 = tempstring.indexOf("i");
+                    let asinindex4 = tempstring.indexOf("n");
+                    let asinindex5 = tempstring.indexOf("(");
+
+                    if (asinindex5 - asinindex4 == 1 && asinindex4 - asinindex3 === 1 && asinindex3 - asinindex2 === 1 && asinindex2 - asinindex1 === 1) {
+                        // find closing paranthesis
+                        let asinstring = tempstring.slice(asinindex5 + 1);
+                        for (let i = 0; i < asinstring.length; i++) {
+                            if (asinstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (asinstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = asinindex5 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+
+                        exponent = tempstring.slice(asinindex5 + 1, closingparanthesisindex + 1) + " * 180 / pi ";
+
+                        if (exponent.includes("asin")) {
+                            exponent = degtoradianforinverse(exponent);
+                        }
+
+                        return tempstring.slice(0, asinindex5 + 1) + exponent + tempstring.slice(closingparanthesisindex + 1);
+
+
+                        // check if 
+
+                    }
+                    else {
+                        return tempstring;
+                    }
+                }
+
+                function degtoradianforinversecos(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    let exponent;
+                    // find index of acos()
+                    let acosindex1 = tempstring.indexOf("a");
+                    let acosindex2 = tempstring.indexOf("c");
+                    let acosindex3 = tempstring.indexOf("o");
+                    let acosindex4 = tempstring.indexOf("s");
+                    let acosindex5 = tempstring.indexOf("(");
+
+                    if (acosindex5 - acosindex4 == 1 && acosindex4 - acosindex3 === 1 && acosindex3 - acosindex2 === 1 && acosindex2 - acosindex1 === 1) {
+                        // find closing paranthesis
+                        let acosstring = tempstring.slice(acosindex5 + 1);
+                        for (let i = 0; i < acosstring.length; i++) {
+                            if (acosstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (acosstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = acosindex5 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+
+                        exponent = tempstring.slice(acosindex5 + 1, closingparanthesisindex + 1) + " * 180 / pi ";
+
+                        if (exponent.includes("acos")) {
+                            exponent = degtoradianforinversecos(exponent);
+                        }
+
+                        return tempstring.slice(0, acosindex5 + 1) + exponent + tempstring.slice(closingparanthesisindex + 1);
+
+
+
+
+                    }
+                    else {
+                        return tempstring;
+                    }
+                }
+
+                function degtoradianforinversetan(string) {
+                    let tempstring = string;
+                    let openparanthesiscount = 0;
+                    let closingparanthesisindex;
+                    let exponent;
+                    // find index of atan()
+                    let atanindex1 = tempstring.indexOf("a");
+                    let atanindex2 = tempstring.indexOf("t");
+                    let atanindex3 = tempstring.indexOf("a", atanindex2 + 1); // Fix for second 'a'
+                    let atanindex4 = tempstring.indexOf("n");
+                    let atanindex5 = tempstring.indexOf("(");
+
+                    if (atanindex5 - atanindex4 == 1 && atanindex4 - atanindex3 === 1 && atanindex3 - atanindex2 === 1 && atanindex2 - atanindex1 === 1) {
+                        // find closing paranthesis
+                        let atanstring = tempstring.slice(atanindex5 + 1);
+                        for (let i = 0; i < atanstring.length; i++) {
+                            if (atanstring[i] === "(") {
+                                openparanthesiscount++;
+                            }
+                            else if (atanstring[i] === ")") {
+                                if (openparanthesiscount === 0) {
+                                    closingparanthesisindex = atanindex5 + 1 + i;
+                                    break;
+                                }
+                                openparanthesiscount--;
+                            }
+                        }
+
+                        exponent = tempstring.slice(atanindex5 + 1, closingparanthesisindex + 1) + " * 180 / pi ";
+
+                        if (exponent.includes("atan")) {
+                            exponent = degtoradianforinversetan(exponent);
+                        }
+
+                        return tempstring.slice(0, atanindex5 + 1) + exponent + tempstring.slice(closingparanthesisindex + 1);
+
+
+                        // check if 
+
+                    }
+                    else {
+                        return tempstring;
+                    }
+                }
+
+
+                string = degtoradianforinversesin(string);
+                string = degtoradianforinversecos(string);
+                string = degtoradianforinversetan(string);
+            }
             else {
-                result.value = "Close all open ')'"
 
+            }
+
+
+
+
+
+            function checkforextraparathesis(string) {
+                let tempstring = string;
+                let openparanthesiscount = 0;
+
+                for (let i = 0; i < tempstring.length; i++) {
+                    if (tempstring[i] === "(") {
+                        openparanthesiscount++;
+                    }
+                    else if (tempstring[i] === ")") {
+                        openparanthesiscount--;
+                    }
+                }
+                if (openparanthesiscount > 0) {
+                    return "extra paranthesis";
+                }
+                else if (openparanthesiscount === 0) {
+                    return "Okay";
+                }
+                else {
+                    return "missing paranthesis";
+                }
+            }
+            string = math.evaluate(string);
+            const status = checkforextraparathesis(string);
+            if (status === "extra paranthesis") {
+                result.value = "Extra Paranthesis Error";
+            }
+            else if (status === "missing paranthesis") {
+                result.value = "Missing Paranthesis Error";
+            }
+            else {
+                lastresult = string;
+                result.value = string;
+                resultgenrated = true;
             }
         }
-    } catch (e) {
-        console.error(e);
-        display.value = "Syntax Error";
+        catch (e) {
+            string = "Syntax Error";
+            result.value = string;
+        }
+
+
     }
 }
 
@@ -1181,7 +1026,6 @@ function clickedexp() {
     }
 }
 
-//  INV will be added
 
 
 
@@ -1206,12 +1050,12 @@ function clickede() {
     if (!resultgenrated) {
         let string = "";
         string = display.value;
-        let laststring = string[string.length-1];
-        if(laststring !== " "){
-            display.value = addtodisplay("* e",string)
+        let laststring = string[string.length - 1];
+        if (laststring !== " ") {
+            display.value = addtodisplay(" e ", string)
         }
-        
-        else{display.value = addtodisplay("e", string);}
+
+        else { display.value = addtodisplay("e", string); }
     } else {
         display.value = result.value;
         let string = "";
@@ -1279,12 +1123,12 @@ function clickedlog() {
 
 function clickedroot() {
 
-    if (!resultgenrated) {    
+    if (!resultgenrated) {
         let string = "";
         string = display.value;
         display.value = addtodisplay("\u221A(", string);
     } else {
-        
+
         display.value = result.value;
         let string = "";
         string = display.value;
@@ -1488,6 +1332,28 @@ function addtodisplay(text, displaytext) {
 function del(displaytext) {
     let result = "";
     displaytext = String(displaytext);
+    let lastword = displaytext.slice(displaytext.length - 4, displaytext.length);
+    let lastword1 = displaytext.slice(displaytext.length - 3, displaytext.length);
+    let lastword2 = displaytext.slice(displaytext.length - 6, displaytext.length);
+    if (lastword1 === "Ans") {
+        result = displaytext.slice(0, displaytext.length - 4);
+        return result;
+    }
+    else if(lastword1 === "EXP" || lastword === "ln("){
+        result = displaytext.slice(0, displaytext.length - 4);
+        return result;
+    }
+    else if( lastword === "sin(" || lastword === "cos(" || lastword === "tan("  || lastword === "log(" || lastword === "log10"  || lastword === "sqrt" || lastword === "e " || lastword === "π " || lastword === "Ans " || lastword === "!" || lastword === "^ " || lastword === "√("){
+        result = displaytext.slice(0, displaytext.length - 4);
+        return result;
+    }
+    else if(lastword2 === "sin⁻¹(" || lastword2 === "cos⁻¹(" || lastword2 === "tan⁻¹("){
+        result = displaytext.slice(0, displaytext.length - 6);
+        return result;
+    }
+    else{
     result = displaytext.slice(0, displaytext.length - 1)
     return result;
+}
+    
 }
