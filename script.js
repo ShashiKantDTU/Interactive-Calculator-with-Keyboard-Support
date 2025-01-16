@@ -472,12 +472,12 @@ function clickedmultiply() {
     if (!resultgenrated) {
         let string = "";
         string = display.value;
-        display.value = addtodisplay(' * ', string);
+        display.value = addtodisplay(' × ', string);
     } else {
         display.value = result.value;
         let string = "";
         string = display.value;
-        display.value = addtodisplay(' * ', string);
+        display.value = addtodisplay(' × ', string);
         resultgenrated = false;
     }
 }
@@ -486,12 +486,12 @@ function clickeddivide() {
     if (!resultgenrated) {
         let string = "";
         string = display.value;
-        display.value = addtodisplay('/', string);
+        display.value = addtodisplay('÷', string);
     } else {
         display.value = result.value;
         let string = "";
         string = display.value;
-        display.value = addtodisplay('/', string);
+        display.value = addtodisplay('÷', string);
         resultgenrated = false;
     }
 }
@@ -528,10 +528,13 @@ function clickedequals() {
 
 
             string = string.replace(/Ans/g, lastresult);
-            string = string.replace(/π/g, Math.PI);
+            string = string.replace(/÷/g, "/");
+            string = string.replace(/×/g, "*");
+            string = string.replace(/π\(/g, "pi*(");
+            string = string.replace(/π/g, "pi");
             string = string.replace(/EXP/g, "e");
-            string = string.replace(/ln\(/g, "log(");
             string = string.replace(/log\(/g, "log10(");
+            string = string.replace(/ln\(/g, "log(");
             string = string.replace(/√/g, "sqrt");
             string = string.replace(/sin⁻¹/g, "asin");
             string = string.replace(/cos⁻¹/g, "acos");
@@ -838,6 +841,7 @@ function clickedequals() {
                     return "missing paranthesis";
                 }
             }
+            console.log("transformed string", string);
             string = math.evaluate(string);
             const status = checkforextraparathesis(string);
             if (status === "extra paranthesis") {
@@ -854,6 +858,7 @@ function clickedequals() {
         }
         catch (e) {
             string = "Syntax Error";
+            console.error(e);
             result.value = string;
         }
 

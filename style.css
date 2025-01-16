@@ -133,6 +133,12 @@ main{
     flex-direction: column;
     gap: 5px;
 }
+
+#divide , #multiply, #subtract, #add {
+    font-family: serif, "bangers";
+    font-weight: bold;
+    font-size: 25px;
+}
 .scibtn {
     /* border: solid  yellow; */
     padding: 5px;

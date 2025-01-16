@@ -1,46 +1,91 @@
 
 # 🧮 **Interactive Calculator with Keyboard Support**
 
-![Calculator Preview](https://placehold.co/800x400?text=Calculator+Preview)
+![Calculator Preview](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035421.png)
 
 *A sleek, responsive, and interactive calculator built with HTML, CSS, and JavaScript.*
 
 The **Interactive Calculator with Keyboard Support** is a powerful web-based calculator that offers multiple modes, including basic arithmetic, scientific calculations, and bitwise operations. It also includes intuitive keyboard support for seamless user interaction.
+
+## 🚀 **Try This**
+
+👨‍💻 **Experience the calculator in action!**
+
+Click the link below to try the **Interactive Calculator with Keyboard Support** live:
+
+[➡️ Try the Calculator Now](https://shashikantdtu.github.io/Interactive-Calculator-with-Keyboard-Support/)  
+
 
 
 
 ## 🚀 **Features**
 
 ### ✨ Key Functionalities:
+
 - **Standard Arithmetic Operations:** Perform basic calculations like addition, subtraction, multiplication, and division.
+
 - **Scientific Functions:** Includes advanced math operations such as:
-  - Sine (`sin`), Cosine (`cos`), Tangent (`tan`), and their inverses (e.g., `sin⁻¹`)
+  - Sine (`sin`), Cosine (`cos`), Tangent (`tan`), and their inverses (e.g., `sin⁻¹`, `cos⁻¹`, `tan⁻¹`)
   - Logarithmic calculations (`log`, `ln`)
   - Exponentiation
   - Square roots and power operations (e.g., `√` and `xⁿ`)
-  - Constants like `π` (Pi) and `e`
-  - Factorials and percentage calculations
-- **Bitwise Operations:** Perform binary operations like AND, OR, XOR, etc. *(Future enhancement)*
-- **Keyboard Support:** Fully functional keyboard interaction for numbers, operators, and special commands. For example:
+  - Constants like `π` (Pi) and `e` (eular's Constant)
+  - Factorials and percentage calculations (`%`).
+
+- **Bitwise Operations:** Perform binary operations like AND, OR, XOR, NOT, etc. *(Future enhancement)*.
+
+- **Trigonometric Lookups:** Predefined angle values (e.g., sin(0), cos(45), tan(90)) are optimized for precise results.
+
+- **Keyboard Support:** Fully functional keyboard interaction for numbers, operators, and special commands:
   - `Enter` evaluates the result.
   - `Backspace` deletes the last character.
   - `Escape` clears all inputs.
+  - Arrow navigation for interactive focus.
+
+- **Parenthesis Handling:**
+  - Automatic and dynamic handling of parentheses for complex expressions like `(5 + 3) × (7 - 2)`.
+  - Prevents missing parentheses and provides user-friendly correction prompts.
+
 - **Mode Selector:** Three modes to dynamically switch between functionalities:
-  - Normal mode
-  - Scientific mode
-  - Bitwise mode *(future updates)*
-- **Error Handling:** Friendly error messages like "Syntax Error" for invalid inputs.
-- **Responsive Design:** Works flawlessly on desktop, tablet, and mobile devices.
+  - **Normal Mode:** Standard arithmetic operations.
+  - **Scientific Mode:** Advanced math functionalities.
+  - **Bitwise Mode:** Handle binary operations *(future updates)*.
+
+- **Error Handling:** Provides user-friendly error messages, such as:
+  - **"Syntax Error"** for malformed expressions or invalid syntax.
+  - **"Division by Zero"** for operations with zero as a divisor.
+  - Missing parentheses or improper function inputs display helpful prompts.
+
+- **Inverse Functionality:** Swift switching between standard and inverse trigonometric functions (`sin` ↔ `sin⁻¹`, etc.) via a toggle button.
+
+- **Result Precision Fix:** Corrects floating-point inaccuracies to ensure precise results for operations like `tan(45)`.
+
+- **Clear and Delete Options:**
+  - `AC` (All Clear) button to reset the calculation entirely.
+  - `DEL` button to delete only the last number or operator.
+
+- **Icons for Constants and Values:**
+  - Dedicated buttons for `π` (Pi) and `e` for easy access in calculations.
+
+- **Responsive Design:** The calculator works flawlessly across all devices, scaling perfectly for:
+  - **Desktop**
+  - **Tablets**
+  - **Mobile Phones**
+
+- **Error History Management:** Remembers your last entries and outputs for rapid correction or reuse *(future enhancement)*.
+
+- **Missing Parenthesis Detection:** Automatically tracks opening and closing parentheses in complex expressions, ensuring balance and providing suggestions/warnings for missing brackets.
+
 
 
 
 ## 📸 **Screenshots**
 
 ### Desktop View:
-![Desktop View](https://placehold.co/800x400?text=Desktop+View)
+![Desktop View](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035421.png)
 
 ### Mobile View:
-![Mobile View](https://placehold.co/400x800?text=Mobile+View)
+![Mobile View](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035843.png)
 
 
 
@@ -186,7 +231,7 @@ function del(displaytext) {
 
 Feel free to connect with me:  
 - **[LinkedIn](https://www.linkedin.com/in/sunny-poddar-2595b4229/)**   
-- **[GitHub](https://github.com/ShashiKantDTU/Interactive-Calculator-with-Keyboard-Support)** 
+- **[GitHub](https://github.com/ShashiKantDTU?tab=overview&from=2025-01-01&to=2025-01-16)** 
 - **[Portfolio](#)**   `will update soon`  
 
 ---
@@ -206,14 +251,12 @@ This project is licensed under the **MIT License**. You are free to use, modify,
 
 ## 📝 **Feedback**
 
-Have suggestions or want to report a bug? Feel free to open an issue or contact me at **shashi.kant935473@gmail.com**.
+Have suggestions or want to report a bug? Feel free to open an issue or contact me at **shashi.kant93547@gmail.com**.
 
 ---
 
 ### 🎉 **Happy Calculating!**
-```
 
----
 
 ### Key Enhancements Added:
 1. Detailed **functionality** explanation for JavaScript functions in the "Functions and Code" section.
@@ -223,3 +266,5 @@ Have suggestions or want to report a bug? Feel free to open an issue or contact 
 5. Polish & organization for modern and professional appeal.
 
 Copy this entire `.md` text and paste it into your `README.md` file directly. Let me know if you need further assistance! 🚀 
+
+
