@@ -1,7 +1,7 @@
 
 # 🧮 **Interactive Calculator with Keyboard Support**
 
-![Calculator Preview](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035421.png)
+![Calculator Preview](https://mega.nz/file/2xVUhDjR#0lME51n9oY_TRHw0jgUlhanHmnwnDCs9EdQoUr_UvEo)
 
 *A sleek, responsive, and interactive calculator built with HTML, CSS, and JavaScript.*
 
@@ -82,7 +82,7 @@ Click the link below to try the **Interactive Calculator with Keyboard Support**
 ## 📸 **Screenshots**
 
 ### Desktop View:
-![Desktop View](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035421.png)
+![Desktop View](https://mega.nz/file/2xVUhDjR#0lME51n9oY_TRHw0jgUlhanHmnwnDCs9EdQoUr_UvEo)
 
 ### Mobile View:
 ![Mobile View](/Interactive-Calculator-with-Keyboard-Support/Screenshots/Screenshot%202025-01-16%20035843.png)
