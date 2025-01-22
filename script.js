@@ -547,7 +547,7 @@ function clickedequals() {
                 function checksinbase(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
+                    let closingparanthesisindex = NaN;
                     // find index of sin()
 
                     let sinindex1 = tempstring.indexOf("s");
@@ -587,7 +587,7 @@ function clickedequals() {
                 function checkcosbase(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
+                    let closingparanthesisindex = NaN;
                     // find index of cos()
 
                     let cosindex1 = tempstring.indexOf("c");
@@ -627,7 +627,7 @@ function clickedequals() {
                 function checktanbase(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
+                    let closingparanthesisindex = NaN;
                     // find index of tan()
                     let tanindex1 = tempstring.indexOf("t");
                     let tanindex0 = tanindex1 - 1;
@@ -674,8 +674,8 @@ function clickedequals() {
                 function degtoradianforinversesin(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
-                    let exponent;
+                    let closingparanthesisindex = NaN;
+                    let exponent = NaN;
                     // find index of asin()
                     let asinindex1 = tempstring.indexOf("a");
                     let asinindex2 = tempstring.indexOf("s");
@@ -683,7 +683,18 @@ function clickedequals() {
                     let asinindex4 = tempstring.indexOf("n");
                     let asinindex5 = tempstring.indexOf("(");
 
-                    if (asinindex5 - asinindex4 == 1 && asinindex4 - asinindex3 === 1 && asinindex3 - asinindex2 === 1 && asinindex2 - asinindex1 === 1) {
+                    // by default if asin is not included in the string the value of "(" asinindex5 will be 3 as it is included in "sin("
+                    // As same for "n" asindex4 will be 2
+                    // for "i" asinindex3 will be 1
+                    // for "s" asinindex2 will be 0
+                    // for "a" asinindex1 will be -1 as it is not found and if directly used in the code it will be fitted as the index of it will be one less then the index of its next character
+                    // so one extra check will be added to check if asinindex1 should not be -1 for the condition to be get true
+                    // otherwise the fucntion will run unwantedly and will give wrong output
+                    // even if the string will not include asin but have sin
+
+
+
+                    if (asinindex5 - asinindex4 == 1 && asinindex4 - asinindex3 === 1 && asinindex3 - asinindex2 === 1 && asinindex2 - asinindex1 === 1 && asinindex1 !== -1) {
                         // find closing paranthesis
                         let asinstring = tempstring.slice(asinindex5 + 1);
                         for (let i = 0; i < asinstring.length; i++) {
@@ -702,7 +713,7 @@ function clickedequals() {
                         exponent = tempstring.slice(asinindex5 + 1, closingparanthesisindex + 1) + " * 180 / pi ";
 
                         if (exponent.includes("asin")) {
-                            exponent = degtoradianforinverse(exponent);
+                            exponent = degtoradianforinversesin(exponent);
                         }
 
                         return tempstring.slice(0, asinindex5 + 1) + exponent + tempstring.slice(closingparanthesisindex + 1);
@@ -719,8 +730,8 @@ function clickedequals() {
                 function degtoradianforinversecos(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
-                    let exponent;
+                    let closingparanthesisindex = NaN;
+                    let exponent = NaN;
                     // find index of acos()
                     let acosindex1 = tempstring.indexOf("a");
                     let acosindex2 = tempstring.indexOf("c");
@@ -728,7 +739,7 @@ function clickedequals() {
                     let acosindex4 = tempstring.indexOf("s");
                     let acosindex5 = tempstring.indexOf("(");
 
-                    if (acosindex5 - acosindex4 == 1 && acosindex4 - acosindex3 === 1 && acosindex3 - acosindex2 === 1 && acosindex2 - acosindex1 === 1) {
+                    if (acosindex5 - acosindex4 == 1 && acosindex4 - acosindex3 === 1 && acosindex3 - acosindex2 === 1 && acosindex2 - acosindex1 === 1 && acosindex1 !== -1) {
                         // find closing paranthesis
                         let acosstring = tempstring.slice(acosindex5 + 1);
                         for (let i = 0; i < acosstring.length; i++) {
@@ -764,8 +775,8 @@ function clickedequals() {
                 function degtoradianforinversetan(string) {
                     let tempstring = string;
                     let openparanthesiscount = 0;
-                    let closingparanthesisindex;
-                    let exponent;
+                    let closingparanthesisindex = NaN;
+                    let exponent = NaN;
                     // find index of atan()
                     let atanindex1 = tempstring.indexOf("a");
                     let atanindex2 = tempstring.indexOf("t");
@@ -773,7 +784,7 @@ function clickedequals() {
                     let atanindex4 = tempstring.indexOf("n");
                     let atanindex5 = tempstring.indexOf("(");
 
-                    if (atanindex5 - atanindex4 == 1 && atanindex4 - atanindex3 === 1 && atanindex3 - atanindex2 === 1 && atanindex2 - atanindex1 === 1) {
+                    if (atanindex5 - atanindex4 == 1 && atanindex4 - atanindex3 === 1 && atanindex3 - atanindex2 === 1 && atanindex2 - atanindex1 === 1 && atanindex1 !== -1) {
                         // find closing paranthesis
                         let atanstring = tempstring.slice(atanindex5 + 1);
                         for (let i = 0; i < atanstring.length; i++) {
@@ -805,14 +816,18 @@ function clickedequals() {
                         return tempstring;
                     }
                 }
-
-
+                
+                // adding a check for isinverse to check if to execute the function or not
+                if(isinverse){
                 string = degtoradianforinversesin(string);
                 string = degtoradianforinversecos(string);
                 string = degtoradianforinversetan(string);
+                }
+                else{
+                    string = string;}
             }
             else {
-
+            
             }
 
 
@@ -841,7 +856,11 @@ function clickedequals() {
                     return "missing paranthesis";
                 }
             }
-            console.log("transformed string", string);
+
+
+
+
+
             string = math.evaluate(string);
             const status = checkforextraparathesis(string);
             if (status === "extra paranthesis") {
